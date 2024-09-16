@@ -15,6 +15,7 @@ class StudentEvaluationSeeder extends Seeder
             'note' => 15.5,
             'student_id' => 1,
             'evaluation_id' => 1,
+            'classroom_id' => 1,
             'appreciation' => Appreciation::Good
         ]);
 
@@ -22,6 +23,7 @@ class StudentEvaluationSeeder extends Seeder
             'note' => 12.0,
             'student_id' => 2,
             'evaluation_id' => 2,
+            'classroom_id' => 1,
             'appreciation' => Appreciation::Fair
         ]);
     }

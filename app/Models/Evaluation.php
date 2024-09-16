@@ -19,5 +19,17 @@ class Evaluation extends Model
         return $this->belongsTo(Subject::class);
     }
 
+    // Relation vers les évaluations des étudiants
+    public function studentEvaluations()
+    {
+        return $this->hasMany(StudentEvaluation::class);
+    }
+
+    // Récupérer les étudiants liés à une évaluation
+    public function students()
+    {
+        return $this->hasManyThrough(Student::class, StudentEvaluation::class, 'evaluation_id', 'id', 'id', 'student_id');
+    }
+
 
 }

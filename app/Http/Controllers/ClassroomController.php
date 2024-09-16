@@ -43,22 +43,64 @@
 namespace App\Http\Controllers;
 
 use App\Models\Classroom;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 class ClassroomController extends Controller
 {
     public function index()
     {
-        $classrooms = Classroom::with('option', 'students', 'subjects')->get(); // Charger les relations
-        return response()->json($classrooms);
+        try {
+            // Récupérer toutes les classes avec les options, étudiants et matières
+            $classrooms = Classroom::with(['option', 'students', 'subjects.teacher'])->get();
+
+            // Formater la réponse JSON pour inclure uniquement les champs nécessaires
+            $formattedClassrooms = $classrooms->map(function ($classroom) {
+                return [
+                    'id' => $classroom->id,
+                    'name' => $classroom->name,
+                    'code' => $classroom->code,
+                    'option' => [
+                        'id' => $classroom->option->id,
+                        'name' => $classroom->option->name
+                    ],
+                    'students' => $classroom->students->map(function ($student) {
+                        return [
+                            'id' => $student->id,
+                            'matricule' => $student->matricule,
+                            'name' => $student->name . ' ' . $student->surname,
+                            'age' => $student->age,
+                        ];
+                    }),
+                    'subjects' => $classroom->subjects->map(function ($subject) {
+                        return [
+                            'id' => $subject->id,
+                            'name' => $subject->name,
+                            'code' => $subject->code,
+                            'teacher' => [
+                                'id' => $subject->teacher->id,
+                                'name' => $subject->teacher->name,
+                                'email' => $subject->teacher->email
+                            ]
+                        ];
+                    })
+                ];
+            });
+
+            return response()->json($formattedClassrooms, 200); // 200 OK
+
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Erreur interne du serveur.'], 500); // 500 Internal Server Error
+        }
     }
+
 
     public function store(Request $request)
     {
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'code' => 'required|string|max:255|unique:classrooms',
-            'option_id' => 'required|exists:options,id', // Validation de la relation
+            'option_id' => 'required|exists:options,id',
         ]);
 
         $classroom = Classroom::create($data);
@@ -67,8 +109,50 @@ class ClassroomController extends Controller
 
     public function show($id)
     {
-        $classroom = Classroom::with('option', 'students', 'subjects')->findOrFail($id); // Charger les relations
-        return response()->json($classroom);
+        try {
+
+            $classroom = Classroom::with(['option', 'students', 'subjects.teacher'])->findOrFail($id);
+
+            // Formater la réponse JSON pour inclure uniquement les champs nécessaires
+            $formattedClassroom = [
+                'id' => $classroom->id,
+                'name' => $classroom->name,
+                'code' => $classroom->code,
+                'option' => [
+                    'id' => $classroom->option->id,
+                    'name' => $classroom->option->name
+                ],
+                'students' => $classroom->students->map(function ($student) {
+                    return [
+                        'id' => $student->id,
+                        'matricule' => $student->matricule,
+                        'name' => $student->name . ' ' . $student->surname,
+                        'age' => $student->age,
+                    ];
+                }),
+                'subjects' => $classroom->subjects->map(function ($subject) {
+                    return [
+                        'id' => $subject->id,
+                        'name' => $subject->name,
+                        'code' => $subject->code,
+                        'teacher' => [
+                            'id' => $subject->teacher->id,
+                            'name' => $subject->teacher->name,
+                            'email' => $subject->teacher->email
+                        ]
+                    ];
+                })
+            ];
+
+            // Retourner la réponse JSON avec les données formatées
+            return response()->json($formattedClassroom, 200); // 200 OK
+
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['error' => 'Classe non trouvée.'], 404); // 404 Not Found
+
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Erreur interne du serveur.'], 500); // 500 Internal Server Error
+        }
     }
 
     public function update(Request $request, $id)

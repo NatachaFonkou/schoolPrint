@@ -21,9 +21,9 @@ class StudentController extends Controller
             'name' => 'required|string|max:255',
             'age' => 'required|integer',
             'photo' => 'nullable|string',
-            'classe_id' => 'required|exists:classrooms,id',
             'promotion_id' => 'required|exists:promotions,id',
         ]);
+        
 
         $student = Student::create($data);
         return response()->json($student, 201);

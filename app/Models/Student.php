@@ -6,11 +6,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class Student extends Model
 {
-    protected $fillable = ['matricule', 'surname', 'name', 'age', 'photo', 'classroom_id', 'promotion_id'];
+    protected $fillable = ['matricule', 'surname', 'name', 'age', 'photo', 'promotion_id'];
 
-    public function classroom()
+    // Relation avec les classes via la table pivot student_classroom
+    public function classrooms()
     {
-        return $this->belongsTo(Classroom::class, 'classroom_id');
+        return $this->belongsToMany(Classroom::class, 'student_classroom')
+            ->withPivot('start_date', 'end_date') // Inclure les dates de début et de fin
+            ->withTimestamps();
+    }
+
+    // Récupérer la classe actuelle (celle sans end_date)
+    public function currentClassroom()
+    {
+        return $this->classrooms()->wherePivot('end_date', null)->first();
     }
 
     public function promotion()
@@ -21,6 +30,12 @@ class Student extends Model
     public function notes()
     {
         return $this->hasMany(StudentEvaluation::class);
+    }
+
+    // Récupérer les notes pour une classe spécifique
+    public function getNotesForClassroom($classroomId)
+    {
+        return $this->notes()->where('classroom_id', $classroomId)->get();
     }
 
     public function decisions()

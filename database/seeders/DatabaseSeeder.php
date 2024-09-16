@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             EvaluationSeeder::class,
             StudentEvaluationSeeder::class,
             ClassroomSubjectSeeder::class,
+            StudentClassroomSeeder::class,
         ]);
     }
 }

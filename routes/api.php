@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SubjectClassroomController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClassroomController;
@@ -49,8 +50,11 @@ Route::middleware('api')->group(function () {
     // Routes pour les subjects
     Route::resource('subjects', SubjectController::class);
 
+    // Routes pour les subject Classroom
+    Route::resource('subjects-classroom', SubjectClassroomController::class);
+
     // Routes pour les teachers
     Route::resource('teachers', TeacherController::class);
 
-});
+   });
 
