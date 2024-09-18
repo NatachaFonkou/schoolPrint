@@ -63,7 +63,7 @@ export default function PlanifiedTrip() {
           options.map((opt)=>(     
             <Card pb='10px'>
               <CardHeader title={opt.name} titleTypographyProps={{ variant: 'h6' }} />
-              <PlanningTable rows={opt.classrooms} handleClick={handleClick}/>
+              <PlanningTable rows={opt.classrooms} idOpt={opt.id} handleClick={handleClick}/>
             </Card>
             
           ))

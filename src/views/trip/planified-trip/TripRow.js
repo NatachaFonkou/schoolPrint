@@ -180,20 +180,17 @@ const TripRow = ({ planningId, plannedTravel }) => {
 
 
   return (
+    
     <>
       <TableRow key={travel.startDate} onClick={handleRowClick} style={{ cursor: 'pointer' }}>
-        <TableCell component="th" scope="row">{data.vehicle.categoryCode}</TableCell>
-        <TableCell>{data.driver.name}</TableCell>
-        <TableCell>{data.city1.name} - {travel.departureQuarter}</TableCell>
+        <TableCell/>
+        <TableCell/>
+        <TableCell/>
+        <TableCell component="th" scope="row">{plannedTravel.code}</TableCell>
+        <TableCell>{plannedTravel.name}</TableCell>
         <TableCell>{data.city2.name} - {travel.destinationQuarter}</TableCell>
+        <TableCell>{plannedTravel.teacher.name}</TableCell>
         <TableCell><b>{formatDate(travel.startDate)}</b></TableCell>
-        <TableCell>{formatDuration(travel.duration)}</TableCell>
-        <TableCell>{travel.ticketPrice}</TableCell>
-        <TableCell>
-          <Stack direction="row" spacing={1}>
-            {getStateChip(travel.state)}
-          </Stack>
-        </TableCell>
         <TableCell>
           <IconButton onClick={handleEdit} color="warning">
             <EditIcon />

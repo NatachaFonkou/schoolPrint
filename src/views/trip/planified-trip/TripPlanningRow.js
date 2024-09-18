@@ -42,25 +42,10 @@ const TripPlanningRow = props => {
   const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false); // State for delete dialog visibility
   const [currentPlanning, setCurrentPlanning] = useState({});
-  const _classrooms=[];
+  // const _classrooms=[];
   const { classrooms, loading: classroomsLoading, error: classroomsError } = useContext(ClassroomsContext);
-  // const _classrooms = classrooms.filter(item => item.option.name === row.name && item.name === row.classroom.)
-  const getStateChip = (state) => {
-    switch (state) {
-      case 0:
-        return <Chip icon={<PublishIcon />} label="Publié" color="primary" />;
-      case 1:
-        return <Chip icon={<ErrorIcon />} label="Non Publié" color="error" />;
-      case 2:
-        return <Chip icon={<ScheduleIcon />} label="En cours" color="warning" />;
-      case 3:
-        return <Chip icon={<CancelIcon />} label="Annulé" color="secondary" />;
-      case 4:
-        return <Chip icon={<CheckCircleIcon />} label="Terminé" color="success" />;
-      default:
-        return <Chip icon={<PublishIcon />} label="Publié" color="primary" />;
-    }
-  };
+  const _classrooms = classrooms.filter(item => item.option.id === idOpt && item.name === row.name)[0];
+  console.log(_classrooms)
 
   const handleEdit = () => {
     setCurrentPlanning(row);
@@ -133,6 +118,7 @@ const TripPlanningRow = props => {
           </IconButton>
         </TableCell>
       </TableRow>
+      {_classrooms?.subjects?(
       <TableRow>
         <TableCell colSpan={5} sx={{ py: '0 !important' }}>
           <Collapse in={open} timeout='auto' unmountOnExit>
@@ -155,23 +141,23 @@ const TripPlanningRow = props => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {_classrooms? (
-                    _classrooms.map((classroom, index) => (
-                      <TripRow key={index} plannedTravel={classroom} planningId={row.id} />
-                    ))
-                  ) : (
-                    <TableRow>
-                      <TableCell colSpan={8} align="center">
-                        <Typography variant="body1">Il n'y a pas de voyages planifiés.</Typography>
-                      </TableCell>
-                    </TableRow>
-                  )}
+                  {
+                    _classrooms.subjects.map((subject, index) => (
+                      <TripRow key={index} plannedTravel={subject} planningId={row.id} />
+                    ))}
                 </TableBody>
               </Table>
             </Box>
           </Collapse>
         </TableCell>
       </TableRow>
+      ) : (
+        <TableRow>
+          <TableCell colSpan={8} align="center">
+            <Typography variant="body1">Il n'y a pas de matières.</Typography>
+          </TableCell>
+        </TableRow>
+      )}
       <UpdatePlanning
         isOpen={isModalOpen}
         onClose={handleCloseModal}

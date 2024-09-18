@@ -20,7 +20,7 @@ import TripPlanningRow from "./TripPlanningRow";
 import {useRouter} from "next/router";
 import {Toaster} from "sonner";
 
-const PlanningTable = ({rows, handleClick}) => {
+const PlanningTable = ({rows, handleClick, idOpt}) => {
 
   console.log(rows)
 
@@ -47,7 +47,7 @@ const PlanningTable = ({rows, handleClick}) => {
           </TableRow>
         ) : (
           rows.map((row) => (
-            <TripPlanningRow key={row.id} row={row} handleClick={handleClick} />
+            <TripPlanningRow key={row.id} idOpt = {idOpt} row={row} handleClick={handleClick} />
           ))
         )}
       </TableBody>
