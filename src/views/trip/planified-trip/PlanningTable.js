@@ -22,7 +22,7 @@ import {Toaster} from "sonner";
 
 const PlanningTable = ({rows, handleClick}) => {
 
-
+  console.log(rows)
 
   return (
 
@@ -32,10 +32,9 @@ const PlanningTable = ({rows, handleClick}) => {
         <TableHead>
           <TableRow>
             <TableCell />
-            <TableCell>Nom</TableCell>
-            <TableCell>Date de début</TableCell>
-            <TableCell>Date de fin</TableCell>
-            <TableCell>État</TableCell>
+            <TableCell>Code</TableCell>
+            <TableCell>Nom Classe</TableCell>
+            <TableCell>Effectif</TableCell>
             <TableCell>Actions</TableCell>
           </TableRow>
         </TableHead>
@@ -43,7 +42,7 @@ const PlanningTable = ({rows, handleClick}) => {
         {rows.length === 0 ? (
           <TableRow>
             <TableCell colSpan={5} align="center">
-              <Typography variant="body1">Il n'y a pas de voyages planifiés.</Typography>
+              <Typography variant="body1">Il n'y a pas de Classe pour cette filière.</Typography>
             </TableCell>
           </TableRow>
         ) : (

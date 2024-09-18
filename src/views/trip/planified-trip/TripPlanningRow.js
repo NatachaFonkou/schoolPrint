@@ -1,4 +1,4 @@
-import React, {Fragment, useState} from "react";
+import React, {Fragment, useState, useContext} from "react";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import IconButton from "@mui/material/IconButton";
@@ -28,17 +28,23 @@ import {toast} from "sonner";
 import axios from 'axios';
 import UpdatePlanning from "./UpdatePlanning";
 import api from "../../../configs/apiConfig";
+import { ClassroomsContext } from 'src/contexts/classroomContext';
+
 
 const TripPlanningRow = props => {
   // ** Props
-  const { row, handleClick } = props
+  const { row, handleClick, idOpt } = props
+  console.log(row)
+  // console.log(key)
 
   // ** State
   const [open, setOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false); // State for delete dialog visibility
   const [currentPlanning, setCurrentPlanning] = useState({});
-
+  const _classrooms=[];
+  const { classrooms, loading: classroomsLoading, error: classroomsError } = useContext(ClassroomsContext);
+  // const _classrooms = classrooms.filter(item => item.option.name === row.name && item.name === row.classroom.)
   const getStateChip = (state) => {
     switch (state) {
       case 0:
@@ -114,15 +120,10 @@ const TripPlanningRow = props => {
           </IconButton>
         </TableCell>
         <TableCell component='th' scope='row' onClick={() => handleClick(row.id)} style={{ cursor: 'pointer' }}>
-          {row.name}
+          {row.code}
         </TableCell>
-        <TableCell>{row.startDate}</TableCell>
-        <TableCell>{row.endDate}</TableCell>
-        <TableCell>
-          <Stack direction="row" spacing={1}>
-            {getStateChip(row.state)}
-          </Stack>
-        </TableCell>
+        <TableCell>{row.name}</TableCell>
+        <TableCell>{row.effectif}</TableCell>
         <TableCell>
           <IconButton onClick={handleEdit} color="warning">
             <EditIcon />
@@ -137,26 +138,26 @@ const TripPlanningRow = props => {
           <Collapse in={open} timeout='auto' unmountOnExit>
             <Box sx={{ m: 2 }}>
               <Typography variant='h6' gutterBottom component='div'>
-                Voyages
+                Matières
               </Typography>
               <Table size='small' aria-label='planned travels'>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Vehicule</TableCell>
-                    <TableCell>Conducteur</TableCell>
-                    <TableCell>Lieu de Depart</TableCell>
-                    <TableCell>Lieu d'arrivée</TableCell>
-                    <TableCell>Heure de Début</TableCell>
-                    <TableCell>Durée</TableCell>
-                    <TableCell>Prix du billet</TableCell>
-                    <TableCell>Etat</TableCell>
+                    <TableCell />
+                    <TableCell />
+                    <TableCell />
+                    <TableCell>Code</TableCell>
+                    <TableCell>Nom</TableCell>
+                    <TableCell>Nbr Evaluations</TableCell>
+                    <TableCell>Enseignants</TableCell>
+                    <TableCell>Coefficient</TableCell>
                     <TableCell>Actions</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {row?.plannedTravels?.length ? (
-                    row.plannedTravels.map((travel, index) => (
-                      <TripRow key={index} plannedTravel={travel} planningId={row.id} />
+                  {_classrooms? (
+                    _classrooms.map((classroom, index) => (
+                      <TripRow key={index} plannedTravel={classroom} planningId={row.id} />
                     ))
                   ) : (
                     <TableRow>

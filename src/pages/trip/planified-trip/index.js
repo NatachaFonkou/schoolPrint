@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { formatDate } from '@fullcalendar/core';
 import FullCalendar from '@fullcalendar/react';
@@ -26,21 +26,20 @@ import Link from "@mui/material/Link";
 import CardHeader from "@mui/material/CardHeader";
 import {useRouter} from "next/router";
 import api from "../../../configs/apiConfig";
-
 export default function PlanifiedTrip() {
 
   const [rows, setRows] = useState([]);
   const router = useRouter();
-
+  const [options, setOptions]= useState([]);
   const handleClick = (id) => {
-    router.push(`/planning/${id}`);
+    router.push(`//${id}`);
   };
-
+  
   useEffect(() => {
     const fetchPlannings = async () => {
       try {
-        const response = await api.get('/planning');
-        setRows(response.data);
+        const response = await api.get('/options');
+        setOptions(response.data);
         console.log(response.data)
       } catch (error) {
         console.error('Erreur lors du chargement des plannings:', error);
@@ -54,16 +53,27 @@ export default function PlanifiedTrip() {
       <Grid item xs={12}>
         <Typography variant='h5'>
           <Link href='' target='_blank'>
-            Voyages Planifies
+            Evaluations
           </Link>
         </Typography>
-        <Typography variant='body2'>Par planning</Typography>
+        <Typography variant='body2'>Par Filière</Typography>
       </Grid>
       <Grid item xs={12}>
-        <Card>
-          <CardHeader title='Planning' titleTypographyProps={{ variant: 'h6' }} />
-          <PlanningTable rows={rows} handleClick={handleClick}/>
+        {options?(
+          options.map((opt)=>(     
+            <Card pb='10px'>
+              <CardHeader title={opt.name} titleTypographyProps={{ variant: 'h6' }} />
+              <PlanningTable rows={opt.classrooms} handleClick={handleClick}/>
+            </Card>
+            
+          ))
+        ):(
+          <Card>
+          <CardHeader title='Pas de Filières' titleTypographyProps={{ variant: 'h6' }} />
         </Card>
+
+        )
+        }
       </Grid>
     </Grid>
   )
